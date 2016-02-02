@@ -30,41 +30,20 @@ class ViewController: UIViewController {
         */
 
 
-        let report = Report(name: "Robin", title: "Bla")
+        let report = Report(name: "Mike", title: "Title")
         report.save { (success, error, record) -> () in
 
-            let post = Post(title: "TIIITLE NEEEW", report: report)
+            let post = Post(title: "ein weiterer Titel", report: report)
             post.save({ (success, error, record) -> () in
                 print("Saving: \(success)")
-            })
-            
-        }
-
-        
-        Lock.synchronize(self) { () -> () in
-            sleep(2)
-            print("before")
+             })
         }
         
-        print("AFTER")
-
         self.postWebservice.load { (data) -> () in
             for post in data {
-                dispatch_async(dispatch_get_main_queue(),{
-                    print("Report: \(post.report?.title)")
-                })
-                
                 post.report({ (report) -> () in
-                    print("Report: \(report.title)")
-                })
-            }
-        }
-        
-        self.reportWebservice.load { (data) -> () in
-            for report in data {
-                dispatch_async(dispatch_get_main_queue(),{
-                    print(report.name)
-                    print(report.title)
+                    SynchronizedLogger().log("\(report.title)")
+                    SynchronizedLogger().log("\(post.title)")
                 })
             }
         }

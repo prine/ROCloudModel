@@ -45,7 +45,6 @@ class Post : ROCloudModel {
         }
     }
    
-    /*
     // Reference
     func report(callback:(report:Report) -> ()) {
         fetchReference("report") { (report:Report) -> () in
@@ -59,5 +58,4 @@ class Post : ROCloudModel {
             callback(reports:reports)
         }
     }
-    */
 }

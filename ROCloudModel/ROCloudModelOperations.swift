@@ -43,7 +43,6 @@ extension ROCloudModel {
     
     func fetchReferenceSynchronous<T:ROCloudModel>(referenceName:String) -> T? {
         let condition = NSCondition()
-
         var retrievedCloudModel:T?
 
         condition.lock()
