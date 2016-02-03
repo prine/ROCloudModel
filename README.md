@@ -60,7 +60,7 @@ class Report : ROCloudModel {
 ```
 
 Post
-```
+```Swift
 class Post : ROCloudModel {
     
     required init() {
@@ -114,7 +114,7 @@ class Post : ROCloudModel {
 ```
 
 To Fetch the data via Webservice
-```
+```Swift
 var postWebservice = ROCloudBaseWebservice<Post>()
 
 self.postWebservice.load { (data) -> () in
