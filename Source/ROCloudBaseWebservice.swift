@@ -53,11 +53,8 @@ public class ROCloudBaseWebservice<T:ROCloudModel> {
                 let cloudModel = T()
                 cloudModel.record = record
                 
-                print("Fetch record by name: \(record?.recordID)")
-                
                 callback(cloudModel: cloudModel)
             } else {
-                print("Something went wrong fetching the record: \(recordName) \(error)")
                 callback(cloudModel: nil)
             }
         }
@@ -80,16 +77,8 @@ public class ROCloudBaseWebservice<T:ROCloudModel> {
     
     public func delete(cloudModel:T, callback:(success:Bool, error:NSError?) -> ()) {
         if let cloudModelRecordID = cloudModel.record?.recordID {
-            
-            print("Record id: \(cloudModelRecordID)")
-            
             model.currentDatabase.deleteRecordWithID(cloudModelRecordID) { (recordID, error) -> Void in
-                if error == nil {
-                    print("Deleted successfully: \(cloudModelRecordID) \(recordID)")
-                } else {
-                    print("ERROR: \(error)")
-                    print("Could not delete model: \(cloudModelRecordID) \(recordID)")
-                }
+                callback(success: error == nil, error: error)
             }
         }
     }
