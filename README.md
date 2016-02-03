@@ -60,8 +60,72 @@ class Report : ROCloudModel {
 
 Post
 ```
-
+class Post : ROCloudModel {
+    
+    required init() {
+        super.init()
+        self.recordType = "Posts"
+        
+        super.initializeRecord()
+    }
+    
+    convenience init(title:String, report:Report? = nil) {
+        self.init()
+        
+        self.title = title
+        self.report = report
+    }
+    
+    var title:String {
+        get {
+            return self.record?["title"] as? String ?? ""
+        }
+        
+        set(value) {
+            self.record?["title"] = value
+        }
+    }
+    
+    var report:Report? {
+        get {
+            return fetchReferenceSynchronous("report")
+        }
+        
+        set(value) {
+            self.setReferenceValue("report", value: value)
+        }
+    }
+   
+    // Asynch Reference
+    func report(callback:(report:Report) -> ()) {
+        fetchReference("report") { (report:Report) -> () in
+            callback(report:report)
+        }
+    }
+    
+    // Asynch Reference List
+    func reports(callback:(reports:Array<Report>) -> ()) {
+        fetchReferenceArray("reports") { (reports:Array<Report>) -> () in
+            callback(reports:reports)
+        }
+    }
+}
 ```
+
+To Fetch the data via Webservice
+```
+var postWebservice = ROCloudBaseWebservice<Post>()
+
+self.postWebservice.load { (data) -> () in
+    for post in data {
+        post.report({ (report) -> () in
+            SynchronizedLogger().log("\(report.title)")
+            SynchronizedLogger().log("\(post.title)")
+        })
+    }
+}
+```
+
 
 ## License
 
