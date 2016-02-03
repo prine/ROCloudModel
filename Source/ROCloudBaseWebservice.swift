@@ -13,6 +13,10 @@ public class ROCloudBaseWebservice<T:ROCloudModel> {
     
     var model:T = T()
     
+    public init() {
+        
+    }
+    
     public func load(predicate:NSPredicate? = nil, sort:NSSortDescriptor? = nil, callback:(data:Array<T>) -> ()) {
         let predicate = predicate ?? NSPredicate(value: true)
         let sort = sort ?? NSSortDescriptor(key: "creationDate", ascending: false)

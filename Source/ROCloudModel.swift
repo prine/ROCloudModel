@@ -12,9 +12,9 @@ import ROConcurrency
 
 public class ROCloudModel {
     
-    var recordType:String = ""
-    var record:CKRecord?
-    var currentDatabase:CKDatabase
+    public var recordType:String = ""
+    public var record:CKRecord?
+    public var currentDatabase:CKDatabase
     
     let container: CKContainer
     let publicDB: CKDatabase
