@@ -10,7 +10,7 @@ import Foundation
 import CloudKit
 import ROConcurrency
 
-class ROCloudModel {
+public class ROCloudModel {
     
     var recordType:String = ""
     var record:CKRecord?
@@ -25,7 +25,7 @@ class ROCloudModel {
     var references = Dictionary<String, CKReference>()
     var referneceLists = Dictionary<String, Array<CKReference>>()
     
-    required init() {
+    public required init() {
         container = CKContainer.defaultContainer()
         publicDB = container.publicCloudDatabase
         privateDB = container.privateCloudDatabase
@@ -34,7 +34,7 @@ class ROCloudModel {
         self.currentDatabase = publicDB
     }
     
-    func initializeRecord() {
+    public func initializeRecord() {
         self.record = CKRecord(recordType: self.recordType)
     }
 }

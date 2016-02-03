@@ -10,9 +10,9 @@ import Foundation
 import CloudKit
 import ROConcurrency
 
-extension ROCloudModel {
+public extension ROCloudModel {
     
-    func save(callback:(success:Bool, error:NSError?, record:CKRecord?) -> ()) {
+    public func save(callback:(success:Bool, error:NSError?, record:CKRecord?) -> ()) {
         if let record = record {
             self.currentDatabase.saveRecord(record, completionHandler: { (record, error) -> Void in
                 callback(success: error == nil, error: error, record: record)
@@ -20,7 +20,7 @@ extension ROCloudModel {
         }
     }
     
-    func saveDeep(callback:(success:Bool, error:NSError?, recordID:CKRecordID?) -> ()) {
+    public func saveDeep(callback:(success:Bool, error:NSError?, recordID:CKRecordID?) -> ()) {
         if let record = record {
             self.currentDatabase.saveRecord(record, completionHandler: { (record, error) -> Void in
                 if error == nil {
@@ -36,13 +36,13 @@ extension ROCloudModel {
         }
     }
     
-    func setReferenceValue<T:ROCloudModel>(referenceName:String, value:T?) {
+    public func setReferenceValue<T:ROCloudModel>(referenceName:String, value:T?) {
         if let givenRecord = value?.record {
             self.record?[referenceName] = CKReference(record: givenRecord, action: CKReferenceAction.None)
         }
     }
     
-    func fetchReferenceSynchronous<T:ROCloudModel>(referenceName:String) -> T? {
+    public func fetchReferenceSynchronous<T:ROCloudModel>(referenceName:String) -> T? {
 
         var retrievedCloudModel:T?
         
@@ -62,7 +62,7 @@ extension ROCloudModel {
     }
 
     
-    func fetchReference<T:ROCloudModel>(referenceName:String, callback:(cloudModel:T) -> ()) {
+    public func fetchReference<T:ROCloudModel>(referenceName:String, callback:(cloudModel:T) -> ()) {
         if let reference = self.record?[referenceName] as? CKReference {
             
             self.currentDatabase.fetchRecordWithID(reference.recordID, completionHandler: { (record, error) -> Void in
@@ -77,7 +77,7 @@ extension ROCloudModel {
         }
     }
     
-    func fetchReferenceArray<T:ROCloudModel>(referenceName:String, callback:(cloudModels:Array<T>) -> ()) {
+    public func fetchReferenceArray<T:ROCloudModel>(referenceName:String, callback:(cloudModels:Array<T>) -> ()) {
         if let references = self.record?[referenceName] as? Array<CKReference> {
             
             var recordIDs = Array<CKRecordID>()

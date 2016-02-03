@@ -9,11 +9,11 @@
 import Foundation
 import CloudKit
 
-class ROCloudBaseWebservice<T:ROCloudModel> {
+public class ROCloudBaseWebservice<T:ROCloudModel> {
     
     var model:T = T()
     
-    func load(predicate:NSPredicate? = nil, sort:NSSortDescriptor? = nil, callback:(data:Array<T>) -> ()) {
+    public func load(predicate:NSPredicate? = nil, sort:NSSortDescriptor? = nil, callback:(data:Array<T>) -> ()) {
         let predicate = predicate ?? NSPredicate(value: true)
         let sort = sort ?? NSSortDescriptor(key: "creationDate", ascending: false)
         let query = CKQuery(recordType: model.recordType, predicate: predicate)
@@ -43,7 +43,7 @@ class ROCloudBaseWebservice<T:ROCloudModel> {
         }
     }
     
-    func loadByRecordName(recordName:String, callback:(cloudModel:T?) -> ()) {
+    public func loadByRecordName(recordName:String, callback:(cloudModel:T?) -> ()) {
         model.currentDatabase.fetchRecordWithID(CKRecordID(recordName: recordName)) { (record, error) -> Void in
             if error == nil {
                 let cloudModel = T()
@@ -59,7 +59,7 @@ class ROCloudBaseWebservice<T:ROCloudModel> {
         }
     }
     
-    func save(cloudModel:T, callback:(success:Bool, error:NSError?, reportID:CKRecordID?) -> ()) {
+    public func save(cloudModel:T, callback:(success:Bool, error:NSError?, reportID:CKRecordID?) -> ()) {
         if let cloudModelRecord = cloudModel.record {
             self.model.currentDatabase.saveRecord(cloudModelRecord) { (record, error) -> Void in
                 if error == nil {
@@ -74,7 +74,7 @@ class ROCloudBaseWebservice<T:ROCloudModel> {
         }
     }
     
-    func delete(cloudModel:T, callback:(success:Bool, error:NSError?) -> ()) {
+    public func delete(cloudModel:T, callback:(success:Bool, error:NSError?) -> ()) {
         if let cloudModelRecordID = cloudModel.record?.recordID {
             
             print("Record id: \(cloudModelRecordID)")
