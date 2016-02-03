@@ -119,10 +119,8 @@ var postWebservice = ROCloudBaseWebservice<Post>()
 
 self.postWebservice.load { (data) -> () in
     for post in data {
-        post.report({ (report) -> () in
-            SynchronizedLogger().log("\(report.title)")
-            SynchronizedLogger().log("\(post.title)")
-        })
+        SynchronizedLogger.sharedInstance.log("\(post.report?.title)")
+        SynchronizedLogger.sharedInstance.log("\(post.title)")
     }
 }
 ```
