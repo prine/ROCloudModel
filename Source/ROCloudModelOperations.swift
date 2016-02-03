@@ -8,6 +8,7 @@
 
 import Foundation
 import CloudKit
+import ROConcurrency
 
 extension ROCloudModel {
     
@@ -42,19 +43,20 @@ extension ROCloudModel {
     }
     
     func fetchReferenceSynchronous<T:ROCloudModel>(referenceName:String) -> T? {
-        let condition = NSCondition()
-        var retrievedCloudModel:T?
 
-        condition.lock()
-        fetchReference(referenceName) { (cloudModel:T) -> () in
-            retrievedCloudModel = cloudModel
+        var retrievedCloudModel:T?
         
-            dispatch_async(dispatch_get_main_queue(),{
-                condition.unlock()
-            })
+        let semaphore = dispatch_semaphore_create(0)
+        
+        self.fetchReference(referenceName) { (cloudModel:T) -> () in
+            retrievedCloudModel = cloudModel
+            dispatch_semaphore_signal(semaphore)
         }
         
-        condition.wait()
+        let timeout = dispatch_time(DISPATCH_TIME_NOW, 1000*1000*1000*5)
+        if (dispatch_semaphore_wait(semaphore, timeout) != 0) {
+            SynchronizedLogger.sharedInstance.log("Semaphore time out received")
+        }
         
         return retrievedCloudModel
     }

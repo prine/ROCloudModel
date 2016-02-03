@@ -29,6 +29,7 @@ class ViewController: UIViewController {
         }
         */
 
+        /*
 
         let report = Report(name: "Mike", title: "Title")
         report.save { (success, error, record) -> () in
@@ -38,13 +39,20 @@ class ViewController: UIViewController {
                 print("Saving: \(success)")
              })
         }
+        */
         
         self.postWebservice.load { (data) -> () in
             for post in data {
+                
+                SynchronizedLogger.sharedInstance.log("\(post.report?.title)")
+                SynchronizedLogger.sharedInstance.log("\(post.title)")
+                
+                /*
                 post.report({ (report) -> () in
                     SynchronizedLogger().log("\(report.title)")
                     SynchronizedLogger().log("\(post.title)")
                 })
+                */
             }
         }
     }
