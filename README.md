@@ -56,7 +56,8 @@ class Report : ROCloudModel {
             self.record?["title"] = value
         }
     }
-}```
+}
+```
 
 Post
 ```
