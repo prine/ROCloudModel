@@ -42,4 +42,15 @@ class Report : ROCloudModel {
             self.record?["title"] = value
         }
     }
+    
+    
+    var stringLists:Array<String> {
+        get {
+            return self.record?["stringLists"] as? Array<String> ?? []
+        }
+        
+        set(value) {
+            self.record?["stringLists"] = value
+        }
+    }
 }

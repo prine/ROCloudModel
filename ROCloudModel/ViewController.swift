@@ -18,55 +18,31 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        /*
-        let query = CKQuery(recordType: "Reports", predicate: NSPredicate(value: true))
+        // Enable caching
+        reportWebservice.caching = true
         
-        let container = CKContainer.defaultContainer()
-        let publicDB = container.publicCloudDatabase
-
-        publicDB.performQuery(query, inZoneWithID: nil) { results, error in
-            print("RESULTS \(results?.count)")
+        reportWebservice.load { (data) -> () in
+            
+            print("Received DATA from Webservice")
+            for report in data {
+                print("REPORT: \(report.name)")
+            }
         }
-        */
-
+        
+        let report = Report(name: "From Code", title: "Title from code")
+        report.stringLists = ["asdasd", "asdasdasdasdasd", "asdasdasdas"]
+        
         /*
-
-        let report = Report(name: "Mike", title: "Title")
         report.save { (success, error, record) -> () in
-
-            let post = Post(title: "ein weiterer Titel", report: report)
-            post.save({ (success, error, record) -> () in
-                print("Saving: \(success)")
-             })
+            print("SUCCESS: \(success)")
+        }
+        
+        reportWebservice.load { (data:Array<Report>) -> () in
+            for report in data {
+                print("\(report.stringLists)")
+            }
         }
         */
-        
-        self.postWebservice.load { (data) -> () in
-            for post in data {
-                
-                SynchronizedLogger.sharedInstance.log("\(post.report?.title)")
-                SynchronizedLogger.sharedInstance.log("\(post.title)")
-                
-                /*
-                post.report({ (report) -> () in
-                    SynchronizedLogger().log("\(report.title)")
-                    SynchronizedLogger().log("\(post.title)")
-                })
-                */
-            }
-        }
-    }
-    
-    func delete() {
-        self.postWebservice.loadByRecordName("CA71C937-9767-4B3E-AC79-6CD566FA10A7") { (post) -> () in
-            if let post = post {
-                self.postWebservice.delete(post, callback: { (success, error) -> () in
-                    if success {
-                        print("Was successfully deleted")
-                    }
-                })
-            }
-        }
     }
 
     override func didReceiveMemoryWarning() {

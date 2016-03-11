@@ -13,7 +13,9 @@ import ROConcurrency
 public extension ROCloudModel {
     
     public func save(callback:(success:Bool, error:NSError?, record:CKRecord?) -> ()) {
-        if let record = record {
+        
+        // FIXME: Rewrite that it can handle more than one save at the same time
+        if let record = self.record {
             self.currentDatabase.saveRecord(record, completionHandler: { (record, error) -> Void in
                 callback(success: error == nil, error: error, record: record)
             })

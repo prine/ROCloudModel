@@ -20,10 +20,8 @@ public class ROCloudModel {
     let publicDB: CKDatabase
     let privateDB: CKDatabase
     
-    let cachingEnabled:Bool = false
-    
     var references = Dictionary<String, CKReference>()
-    var referneceLists = Dictionary<String, Array<CKReference>>()
+    var referenceLists = Dictionary<String, Array<CKReference>>()
     
     public required init() {
         container = CKContainer.defaultContainer()
@@ -36,5 +34,23 @@ public class ROCloudModel {
     
     public func initializeRecord() {
         self.record = CKRecord(recordType: self.recordType)
+    }
+    
+    public func encode() -> NSData? {
+        if let record = self.record {
+            let archivedObject = NSKeyedArchiver.archivedDataWithRootObject(record)
+            return archivedObject
+        }
+        
+        return nil
+    }
+    
+    public func decode(data:NSData) -> ROCloudModel? {
+        if let record = NSKeyedUnarchiver.unarchiveObjectWithData(data) as? CKRecord {
+            self.record = record
+            return self
+        } else {
+            return nil
+        }
     }
 }

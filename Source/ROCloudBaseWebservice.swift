@@ -8,13 +8,17 @@
 
 import Foundation
 import CloudKit
+import ROConcurrency
 
 public class ROCloudBaseWebservice<T:ROCloudModel> {
     
-    var model:T = T()
+    public var caching:Bool = false
+    public var localCache = LocalCache<T>()
     
+    var model:T = T()
+
     public init() {
-        
+        localCache.key = model.recordType
     }
     
     public func load(predicate:NSPredicate? = nil, sort:NSSortDescriptor? = nil, callback:(data:Array<T>) -> ()) {
@@ -24,6 +28,14 @@ public class ROCloudBaseWebservice<T:ROCloudModel> {
         
         query.sortDescriptors = [sort]
         
+        let cancable = Delay.delayCall(0.5) { () -> () in
+            // First return offline data
+            if self.caching {
+                callback(data:self.localCache.loadData())
+            }
+        }
+        
+        // Then return online data
         model.currentDatabase.performQuery(query, inZoneWithID: nil) { results, error in
             if error != nil {
                 callback(data: Array<T>())
@@ -37,10 +49,13 @@ public class ROCloudBaseWebservice<T:ROCloudModel> {
                         records.append(cloudModel)
                     }
                     
-                    if self.model.cachingEnabled {
-                        // Store data persistent
+                    if self.caching {
+                        // Store data per sistent
+                        self.localCache.storeData(records)
                     }
                     
+                    // If the online data is retrieved before the delay timer runs out cancel the offline data and only return the online data
+                    Delay.cancelDelayCall(cancable)
                     callback(data: records)
                 }
             }
