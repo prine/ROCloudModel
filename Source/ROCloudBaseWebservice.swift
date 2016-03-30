@@ -54,7 +54,7 @@ public class ROCloudBaseWebservice<T:ROCloudModel> {
             records.append(cloudModel)
         }
         
-        operation.queryCompletionBlock = { [unowned self] (cursor, error) in
+        operation.queryCompletionBlock = { (cursor, error) in
             if error != nil {
                 callback(data: Array<T>())
                 return
