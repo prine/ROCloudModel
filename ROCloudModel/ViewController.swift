@@ -29,6 +29,14 @@ class ViewController: UIViewController {
             }
         }
         
+        reportWebservice.load(amountRecords: 1) { (data) in
+            
+            print("Received DATA from Webservice (RESULT LIMIT)")
+            for report in data {
+                print("REPORT: \(report.name)")
+            }
+        }
+        
         let report = Report(name: "From Code", title: "Title from code")
         report.stringLists = ["asdasd", "asdasdasdasdasd", "asdasdasdas"]
         

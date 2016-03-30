@@ -9,6 +9,7 @@
 import Foundation
 import CloudKit
 import ROConcurrency
+import ROHelper
 
 public class ROCloudBaseWebservice<T:ROCloudModel> {
     
@@ -21,7 +22,7 @@ public class ROCloudBaseWebservice<T:ROCloudModel> {
         localCache.key = model.recordType
     }
     
-    public func load(predicate:NSPredicate? = nil, sort:NSSortDescriptor? = nil, callback:(data:Array<T>) -> ()) {
+    public func load(predicate:NSPredicate? = nil, sort:NSSortDescriptor? = nil, amountRecords:Int? = nil, desiredKeys:Array<String>? = nil, callback:(data:Array<T>) -> ()) {
         let predicate = predicate ?? NSPredicate(value: true)
         let sort = sort ?? NSSortDescriptor(key: "creationDate", ascending: false)
         let query = CKQuery(recordType: model.recordType, predicate: predicate)
@@ -35,30 +36,42 @@ public class ROCloudBaseWebservice<T:ROCloudModel> {
             }
         }
         
-        // Then return online data
-        model.currentDatabase.performQuery(query, inZoneWithID: nil) { results, error in
+        let operation = CKQueryOperation(query: query)
+        
+        if let amountRecords = amountRecords {
+            operation.resultsLimit = amountRecords
+        }
+        
+        if let desiredKeys = desiredKeys {
+            operation.desiredKeys = desiredKeys
+        }
+        
+        var records = Array<T>()
+        
+        operation.recordFetchedBlock = { (record) in
+            let cloudModel = T()
+            cloudModel.record = record
+            records.append(cloudModel)
+        }
+        
+        operation.queryCompletionBlock = { [unowned self] (cursor, error) in
             if error != nil {
                 callback(data: Array<T>())
-            } else {
-                var records = Array<T>()
-                
-                if let results = results {
-                    for record in results {
-                        let cloudModel = T()
-                        cloudModel.record = record
-                        records.append(cloudModel)
-                    }
-                    
-                    if self.caching {
-                        // Store data per sistent
-                        self.localCache.storeData(records)
-                    }
-                    
-                    // If the online data is retrieved before the delay timer runs out cancel the offline data and only return the online data
-                    Delay.cancelDelayCall(cancable)
-                    callback(data: records)
-                }
+                return
             }
+            
+            if self.caching {
+                // Store data per sistent
+                self.localCache.storeData(records)
+            }
+            
+            // If the online data is retrieved before the delay timer runs out cancel the offline data and only return the online data
+            Delay.cancelDelayCall(cancable)
+            callback(data: records)
+        }
+        
+        if ROHelper.ConnectivityHelper.isConnectedToNetwork() {
+            model.currentDatabase.addOperation(operation)
         }
     }
     

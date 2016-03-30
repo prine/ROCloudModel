@@ -9,7 +9,7 @@
 
 Pod::Spec.new do |s|
 s.name             = "ROCloudModel"
-s.version          = "0.0.5"
+s.version          = "0.0.6"
 s.summary          = "CloudKit Data Mapper"
 s.description      = <<-DESC
 Provides an abstract layer above the CloudKit and simplifies the mapping between CKRecord and Swift Data classes.
@@ -31,4 +31,5 @@ s.resource_bundles = {
 # s.public_header_files = 'Pod/Classes/**/*.h'
 s.frameworks = 'UIKit', 'CloudKit'
 s.dependency 'ROConcurrency'
+s.dependency 'ROHelper'
 end
