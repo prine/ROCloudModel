@@ -31,5 +31,4 @@ s.resource_bundles = {
 # s.public_header_files = 'Pod/Classes/**/*.h'
 s.frameworks = 'UIKit', 'CloudKit'
 s.dependency 'ROConcurrency'
-s.dependency 'ROHelper'
 end

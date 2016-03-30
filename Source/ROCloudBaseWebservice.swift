@@ -10,6 +10,7 @@ import Foundation
 import CloudKit
 import ROConcurrency
 import ROHelper
+import SystemConfiguration
 
 public class ROCloudBaseWebservice<T:ROCloudModel> {
     
@@ -70,7 +71,7 @@ public class ROCloudBaseWebservice<T:ROCloudModel> {
             callback(data: records)
         }
         
-        if ROHelper.ConnectivityHelper.isConnectedToNetwork() {
+        if self.isConnectedToNetwork() {
             model.currentDatabase.addOperation(operation)
         }
     }
@@ -109,5 +110,22 @@ public class ROCloudBaseWebservice<T:ROCloudModel> {
                 callback(success: error == nil, error: error)
             }
         }
+    }
+    
+    private func isConnectedToNetwork() -> Bool {
+        var zeroAddress = sockaddr_in()
+        zeroAddress.sin_len = UInt8(sizeofValue(zeroAddress))
+        zeroAddress.sin_family = sa_family_t(AF_INET)
+        
+        let defaultRouteReachability = withUnsafePointer(&zeroAddress) {
+            SCNetworkReachabilityCreateWithAddress(nil, UnsafePointer($0))
+        }
+        var flags = SCNetworkReachabilityFlags.ConnectionAutomatic
+        if SCNetworkReachabilityGetFlags(defaultRouteReachability!, &flags) == false {
+            return false
+        }
+        let isReachable = (flags.rawValue & UInt32(kSCNetworkFlagsReachable)) != 0
+        let needsConnection = (flags.rawValue & UInt32(kSCNetworkFlagsConnectionRequired)) != 0
+        return (isReachable && !needsConnection)
     }
 }
