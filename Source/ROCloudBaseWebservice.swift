@@ -9,7 +9,6 @@
 import Foundation
 import CloudKit
 import ROConcurrency
-import ROHelper
 import SystemConfiguration
 
 public class ROCloudBaseWebservice<T:ROCloudModel> {
