@@ -11,9 +11,14 @@ import CloudKit
 import ROConcurrency
 import SystemConfiguration
 
+
+public enum DataSource {
+    case ONLINE
+    case OFFLINE
+}
+
 public class ROCloudBaseWebservice<T:ROCloudModel> {
     
-    public var caching:Bool = false
     public var localCache = LocalCache<T>()
     
     var model:T = T()
@@ -28,13 +33,6 @@ public class ROCloudBaseWebservice<T:ROCloudModel> {
         let query = CKQuery(recordType: model.recordType, predicate: predicate)
         
         query.sortDescriptors = [sort]
-        
-        let cancable = Delay.delayCall(0.5) { () -> () in
-            // First return offline data
-            if self.caching {
-                callback(data:self.localCache.loadData())
-            }
-        }
         
         let operation = CKQueryOperation(query: query)
         
@@ -59,14 +57,7 @@ public class ROCloudBaseWebservice<T:ROCloudModel> {
                 callback(data: Array<T>())
                 return
             }
-            
-            if self.caching {
-                // Store data per sistent
-                self.localCache.storeData(records)
-            }
-            
-            // If the online data is retrieved before the delay timer runs out cancel the offline data and only return the online data
-            Delay.cancelDelayCall(cancable)
+        
             callback(data: records)
         }
         
@@ -74,6 +65,25 @@ public class ROCloudBaseWebservice<T:ROCloudModel> {
             model.currentDatabase.addOperation(operation)
         }
     }
+    
+    public func loadWithCache(predicate:NSPredicate? = nil, sort:NSSortDescriptor? = nil, amountRecords:Int? = nil, desiredKeys:Array<String>? = nil, callback:(data:Array<T>, dataSource:DataSource) -> ()) {
+        
+        let cancable = Delay.delayCall(0.5) { () -> () in
+            // First return offline data
+            callback(data:self.localCache.loadData(), dataSource: DataSource.OFFLINE)
+        }
+        
+        self.load(predicate, sort: sort, amountRecords: amountRecords, desiredKeys: desiredKeys, callback: { (data) in
+            // Store data per sistent
+            self.localCache.storeData(data)
+            
+            // If the online data is retrieved before the delay timer runs out cancel the offline data and only return the online data
+            Delay.cancelDelayCall(cancable)
+            
+            callback(data: data, dataSource: DataSource.ONLINE)
+        })
+    }
+
     
     public func loadByRecordName(recordName:String, callback:(cloudModel:T?) -> ()) {
         model.currentDatabase.fetchRecordWithID(CKRecordID(recordName: recordName)) { (record, error) -> Void in

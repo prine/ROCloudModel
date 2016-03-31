@@ -18,15 +18,17 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Enable caching
-        reportWebservice.caching = true
-        
         reportWebservice.load { (data) -> () in
             
             print("Received DATA from Webservice")
             for report in data {
                 print("REPORT: \(report.name)")
             }
+        }
+        
+        reportWebservice.loadWithCache { (data, dataSource) in
+            print("Data loaded from \(dataSource)")
+            print("Count data: \(data.count)")
         }
         
         reportWebservice.load(amountRecords: 1) { (data) in
