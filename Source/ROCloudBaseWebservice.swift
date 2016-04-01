@@ -24,7 +24,7 @@ public class ROCloudBaseWebservice<T:ROCloudModel> {
     var model:T = T()
 
     public init() {
-        localCache.key = model.recordType
+        localCache.defaultKey = model.recordType
     }
     
     public func load(predicate:NSPredicate? = nil, sort:NSSortDescriptor? = nil, amountRecords:Int? = nil, desiredKeys:Array<String>? = nil, callback:(data:Array<T>) -> ()) {
@@ -66,16 +66,16 @@ public class ROCloudBaseWebservice<T:ROCloudModel> {
         }
     }
     
-    public func loadWithCache(predicate:NSPredicate? = nil, sort:NSSortDescriptor? = nil, amountRecords:Int? = nil, desiredKeys:Array<String>? = nil, callback:(data:Array<T>, dataSource:DataSource) -> ()) {
+    public func loadWithCache(predicate:NSPredicate? = nil, sort:NSSortDescriptor? = nil, amountRecords:Int? = nil, desiredKeys:Array<String>? = nil, cachingKey:String? = nil, callback:(data:Array<T>, dataSource:DataSource) -> ()) {
         
         let cancable = Delay.delayCall(0.5) { () -> () in
             // First return offline data
-            callback(data:self.localCache.loadData(), dataSource: DataSource.OFFLINE)
+            callback(data:self.localCache.loadData(cachingKey), dataSource: DataSource.OFFLINE)
         }
         
         self.load(predicate, sort: sort, amountRecords: amountRecords, desiredKeys: desiredKeys, callback: { (data) in
             // Store data per sistent
-            self.localCache.storeData(data)
+            self.localCache.storeData(data, cachingKey: cachingKey)
             
             // If the online data is retrieved before the delay timer runs out cancel the offline data and only return the online data
             Delay.cancelDelayCall(cancable)

@@ -18,24 +18,18 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        reportWebservice.load { (data) -> () in
-            
-            print("Received DATA from Webservice")
+        
+        reportWebservice.loadWithCache(amountRecords: 1, cachingKey: "cache.limit1") { (data, dataSource) in
             for report in data {
-                print("REPORT: \(report.name)")
+                print("Data loaded from limit 1 \(dataSource)")
+                print("REPORT (limit 1): \(report.name)")
             }
         }
         
-        reportWebservice.loadWithCache { (data, dataSource) in
-            print("Data loaded from \(dataSource)")
-            print("Count data: \(data.count)")
-        }
-        
-        reportWebservice.load(amountRecords: 1) { (data) in
-            
-            print("Received DATA from Webservice (RESULT LIMIT)")
+        reportWebservice.loadWithCache(amountRecords: 2, cachingKey: "cache.limit2") { (data, dataSource) in
             for report in data {
-                print("REPORT: \(report.name)")
+                print("Data loaded from limit 2 \(dataSource)")
+                print("REPORT (limit 2): \(report.name)")
             }
         }
         

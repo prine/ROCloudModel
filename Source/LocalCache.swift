@@ -11,9 +11,9 @@ import Foundation
 public class LocalCache<T:ROCloudModel> {
     
     var userDefaults = NSUserDefaults.standardUserDefaults()
-    var key = "localCache.DefaultKey"
+    var defaultKey = "localCache.DefaultKey"
     
-    public func storeData<T:ROCloudModel>(data:Array<T>) {
+    public func storeData<T:ROCloudModel>(data:Array<T>, cachingKey:String? = nil) {
         
         var serializableObjects = Array<NSData>()
         
@@ -23,15 +23,15 @@ public class LocalCache<T:ROCloudModel> {
             }
         }
         
-        userDefaults.setObject(serializableObjects, forKey: key)
+        userDefaults.setObject(serializableObjects, forKey: cachingKey ?? defaultKey)
         userDefaults.synchronize()
     }
     
-    public func loadData<T:ROCloudModel>() -> Array<T> {
+    public func loadData<T:ROCloudModel>(cachingKey:String? = nil) -> Array<T> {
         
         var models = Array<T>()
         
-        if let serializedObjects = userDefaults.objectForKey(key) as? Array<NSData> {
+        if let serializedObjects = userDefaults.objectForKey(cachingKey ?? defaultKey) as? Array<NSData> {
             for serializeObject in serializedObjects {
                 
                 let cloudModel = T()
