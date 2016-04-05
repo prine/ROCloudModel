@@ -22,6 +22,8 @@ public class ROCloudBaseWebservice<T:ROCloudModel> {
     public var localCache = LocalCache<T>()
     
     var model:T = T()
+    
+    var fetchedRecords = Array<T>()
 
     public init() {
         localCache.defaultKey = model.recordType
@@ -44,26 +46,35 @@ public class ROCloudBaseWebservice<T:ROCloudModel> {
             operation.desiredKeys = desiredKeys
         }
         
-        var records = Array<T>()
+        self.fetchedRecords = Array<T>()
         
-        operation.recordFetchedBlock = { (record) in
-            let cloudModel = T()
-            cloudModel.record = record
-            records.append(cloudModel)
-        }
+        operation.recordFetchedBlock = self.fetchedAsRecord
         
         operation.queryCompletionBlock = { (cursor, error) in
             if error != nil {
                 callback(data: Array<T>())
                 return
             }
-        
-            callback(data: records)
+            
+            if let cursor = cursor {
+                // There is more data to fetch
+                let moreWork = CKQueryOperation(cursor: cursor)
+                moreWork.recordFetchedBlock = self.fetchedAsRecord
+                moreWork.queryCompletionBlock = operation.queryCompletionBlock
+            } else {
+                callback(data: self.fetchedRecords)
+            }
         }
         
         if self.isConnectedToNetwork() {
             model.currentDatabase.addOperation(operation)
         }
+    }
+    
+    private func fetchedAsRecord(record:CKRecord!) {
+        let cloudModel = T()
+        cloudModel.record = record
+        fetchedRecords.append(cloudModel)
     }
     
     public func loadWithCache(predicate:NSPredicate? = nil, sort:NSSortDescriptor? = nil, amountRecords:Int? = nil, desiredKeys:Array<String>? = nil, cachingKey:String? = nil, callback:(data:Array<T>, dataSource:DataSource) -> ()) {
