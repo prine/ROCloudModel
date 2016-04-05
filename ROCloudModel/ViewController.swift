@@ -17,24 +17,24 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
-        reportWebservice.loadWithCache(amountRecords: 1, cachingKey: "cache.limit1") { (data, dataSource) in
-            for report in data {
-                print("Data loaded from limit 1 \(dataSource)")
-                print("REPORT (limit 1): \(report.name)")
-            }
+
+        reportWebservice.load { (data) in
+            print("Count: \(data.count)")
         }
         
+        // self.createTestData()
+        
+        /*
         reportWebservice.loadWithCache(amountRecords: 2, cachingKey: "cache.limit2") { (data, dataSource) in
             for report in data {
                 print("Data loaded from limit 2 \(dataSource)")
-                print("REPORT (limit 2): \(report.name)")
+                print("REPORT (cache with limit 2): \(report.name)")
             }
         }
         
         let report = Report(name: "From Code", title: "Title from code")
         report.stringLists = ["asdasd", "asdasdasdasdasd", "asdasdasdas"]
+        */
         
         /*
         report.save { (success, error, record) -> () in
@@ -47,6 +47,15 @@ class ViewController: UIViewController {
             }
         }
         */
+    }
+    
+    func createTestData() {
+        for i in 1...200 {
+            let report = Report(name: "Testentry\(i)", title: "Title (\(i))")
+            report.save({ (success, error, record) in
+                print("Saved \(i) \(success)")
+            })
+        }
     }
 
     override func didReceiveMemoryWarning() {

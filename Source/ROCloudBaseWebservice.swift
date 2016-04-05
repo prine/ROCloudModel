@@ -29,19 +29,22 @@ public class ROCloudBaseWebservice<T:ROCloudModel> {
         localCache.defaultKey = model.recordType
     }
     
-    public func load(predicate:NSPredicate? = nil, sort:NSSortDescriptor? = nil, amountRecords:Int? = nil, desiredKeys:Array<String>? = nil, callback:(data:Array<T>) -> ()) {
+    public func load(predicate:NSPredicate? = nil, sortDescriptors:Array<NSSortDescriptor>? = nil, amountRecords:Int? = nil, desiredKeys:Array<String>? = nil, callback:(data:Array<T>) -> ()) {
         let predicate = predicate ?? NSPredicate(value: true)
-        let sort = sort ?? NSSortDescriptor(key: "creationDate", ascending: false)
+        
         let query = CKQuery(recordType: model.recordType, predicate: predicate)
         
-        query.sortDescriptors = [sort]
-        
         let operation = CKQueryOperation(query: query)
+        
+        // If sort descriptors are a
+        if let sortDescriptors = sortDescriptors {
+            query.sortDescriptors = sortDescriptors
+        }
         
         if let amountRecords = amountRecords {
             operation.resultsLimit = amountRecords
         }
-        
+
         if let desiredKeys = desiredKeys {
             operation.desiredKeys = desiredKeys
         }
@@ -51,23 +54,26 @@ public class ROCloudBaseWebservice<T:ROCloudModel> {
         operation.recordFetchedBlock = self.fetchedAsRecord
         
         operation.queryCompletionBlock = { (cursor, error) in
-            if error != nil {
-                callback(data: Array<T>())
-                return
-            }
-            
-            if let cursor = cursor {
-                // There is more data to fetch
-                let moreWork = CKQueryOperation(cursor: cursor)
-                moreWork.recordFetchedBlock = self.fetchedAsRecord
-                moreWork.queryCompletionBlock = operation.queryCompletionBlock
-            } else {
-                callback(data: self.fetchedRecords)
-            }
+            self.retrieveNextRecords(cursor, error:error, records:self.fetchedRecords, callback: callback)
         }
         
-        if self.isConnectedToNetwork() {
-            model.currentDatabase.addOperation(operation)
+        self.model.currentDatabase.addOperation(operation)
+    }
+    
+    private func retrieveNextRecords(cursor:CKQueryCursor?, error:NSError?, records:Array<T>, callback:(records:Array<T>) -> ()) {
+        if let cursor = cursor {
+            // There is more data to fetch
+            let moreWork = CKQueryOperation(cursor: cursor)
+            moreWork.recordFetchedBlock = self.fetchedAsRecord
+            moreWork.queryCompletionBlock =  { (cursor, error) in
+                self.retrieveNextRecords(cursor, error:error, records:self.fetchedRecords, callback: callback)
+            }
+
+            if self.isConnectedToNetwork() {
+                self.model.currentDatabase.addOperation(moreWork)
+            }
+        } else {
+            callback(records: self.fetchedRecords)
         }
     }
     
@@ -77,14 +83,17 @@ public class ROCloudBaseWebservice<T:ROCloudModel> {
         fetchedRecords.append(cloudModel)
     }
     
-    public func loadWithCache(predicate:NSPredicate? = nil, sort:NSSortDescriptor? = nil, amountRecords:Int? = nil, desiredKeys:Array<String>? = nil, cachingKey:String? = nil, callback:(data:Array<T>, dataSource:DataSource) -> ()) {
+    public func loadWithCache(predicate:NSPredicate? = nil, sortDescriptors:Array<NSSortDescriptor>? = nil, amountRecords:Int? = nil, desiredKeys:Array<String>? = nil, cachingKey:String? = nil, callback:(data:Array<T>, dataSource:DataSource) -> ()) {
         
         let cancable = Delay.delayCall(0.5) { () -> () in
             // First return offline data
             callback(data:self.localCache.loadData(cachingKey), dataSource: DataSource.OFFLINE)
         }
         
-        self.load(predicate, sort: sort, amountRecords: amountRecords, desiredKeys: desiredKeys, callback: { (data) in
+        self.load(predicate, sortDescriptors: sortDescriptors, amountRecords: amountRecords, desiredKeys: desiredKeys, callback: { (data) in
+            
+            print("COUNT: \(data.count)")
+            
             // Store data per sistent
             self.localCache.storeData(data, cachingKey: cachingKey)
             
