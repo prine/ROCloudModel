@@ -9,17 +9,18 @@
 import Foundation
 import CloudKit
 import ROConcurrency
+import ROHelper
 import SystemConfiguration
 
 
 public enum DataSource {
-    case ONLINE
-    case OFFLINE
+    case online
+    case offline
 }
 
-public class ROCloudBaseWebservice<T:ROCloudModel> {
+open class ROCloudBaseWebservice<T:ROCloudModel> {
     
-    public var localCache = LocalCache<T>()
+    open var localCache = LocalCache<T>()
     
     var model:T = T()
     
@@ -29,7 +30,7 @@ public class ROCloudBaseWebservice<T:ROCloudModel> {
         localCache.defaultKey = model.recordType
     }
     
-    public func load(predicate:NSPredicate? = nil, sortDescriptors:Array<NSSortDescriptor>? = nil, amountRecords:Int? = nil, desiredKeys:Array<String>? = nil, callback:(data:Array<T>) -> ()) {
+    open func load(_ predicate:NSPredicate? = nil, sortDescriptors:Array<NSSortDescriptor>? = nil, amountRecords:Int? = nil, desiredKeys:Array<String>? = nil, callback:@escaping (_ data:Array<T>) -> ()) {
         let predicate = predicate ?? NSPredicate(value: true)
         
         let query = CKQuery(recordType: model.recordType, predicate: predicate)
@@ -54,13 +55,14 @@ public class ROCloudBaseWebservice<T:ROCloudModel> {
         operation.recordFetchedBlock = self.fetchedAsRecord
         
         operation.queryCompletionBlock = { (cursor, error) in
+            print(error.debugDescription)
             self.retrieveNextRecords(cursor, error:error, records:self.fetchedRecords, callback: callback)
         }
         
-        self.model.currentDatabase.addOperation(operation)
+        self.model.currentDatabase.add(operation)
     }
     
-    private func retrieveNextRecords(cursor:CKQueryCursor?, error:NSError?, records:Array<T>, callback:(records:Array<T>) -> ()) {
+    fileprivate func retrieveNextRecords(_ cursor:CKQueryCursor?, error:Error?, records:Array<T>, callback:@escaping (_ records:Array<T>) -> ()) {
         if let cursor = cursor {
             // There is more data to fetch
             let moreWork = CKQueryOperation(cursor: cursor)
@@ -69,92 +71,72 @@ public class ROCloudBaseWebservice<T:ROCloudModel> {
                 self.retrieveNextRecords(cursor, error:error, records:self.fetchedRecords, callback: callback)
             }
 
-            if self.isConnectedToNetwork() {
-                self.model.currentDatabase.addOperation(moreWork)
+            if ROHelper.ConnectivityHelper.isConnectedToNetwork() {
+                self.model.currentDatabase.add(moreWork)
             }
         } else {
-            callback(records: self.fetchedRecords)
+            callback(self.fetchedRecords)
         }
     }
     
-    private func fetchedAsRecord(record:CKRecord!) {
+    fileprivate func fetchedAsRecord(_ record:CKRecord!) {
         let cloudModel = T()
         cloudModel.record = record
         fetchedRecords.append(cloudModel)
     }
     
-    public func loadWithCache(predicate:NSPredicate? = nil, sortDescriptors:Array<NSSortDescriptor>? = nil, amountRecords:Int? = nil, desiredKeys:Array<String>? = nil, cachingKey:String? = nil, callback:(data:Array<T>, dataSource:DataSource) -> ()) {
+    open func loadWithCache(_ predicate:NSPredicate? = nil, sortDescriptors:Array<NSSortDescriptor>? = nil, amountRecords:Int? = nil, desiredKeys:Array<String>? = nil, cachingKey:String? = nil, callback:@escaping (_ data:Array<T>, _ dataSource:DataSource) -> ()) {
         
         let cancable = Delay.delayCall(0.5) { () -> () in
             // First return offline data
-            callback(data:self.localCache.loadData(cachingKey), dataSource: DataSource.OFFLINE)
+            callback(self.localCache.loadData(cachingKey), DataSource.offline)
         }
         
         self.load(predicate, sortDescriptors: sortDescriptors, amountRecords: amountRecords, desiredKeys: desiredKeys, callback: { (data) in
-            
-            print("COUNT: \(data.count)")
-            
             // Store data per sistent
             self.localCache.storeData(data, cachingKey: cachingKey)
             
             // If the online data is retrieved before the delay timer runs out cancel the offline data and only return the online data
-            Delay.cancelDelayCall(cancable)
+            // Delay.cancelDelayCall(cancable) FIXME (Cancelable requests are currently not supported in the ROConcurrency framework)
             
-            callback(data: data, dataSource: DataSource.ONLINE)
+            callback(data, DataSource.online)
         })
     }
 
     
-    public func loadByRecordName(recordName:String, callback:(cloudModel:T?) -> ()) {
-        model.currentDatabase.fetchRecordWithID(CKRecordID(recordName: recordName)) { (record, error) -> Void in
+    open func loadByRecordName(_ recordName:String, callback:@escaping (_ cloudModel:T?) -> ()) {
+        model.currentDatabase.fetch(withRecordID: CKRecordID(recordName: recordName)) { (record, error) -> Void in
             if error == nil {
                 let cloudModel = T()
                 cloudModel.record = record
                 
-                callback(cloudModel: cloudModel)
+                callback(cloudModel)
             } else {
-                callback(cloudModel: nil)
+                callback(nil)
             }
         }
     }
     
-    public func save(cloudModel:T, callback:(success:Bool, error:NSError?, reportID:CKRecordID?) -> ()) {
+    open func save(_ cloudModel:T, callback:@escaping (_ success:Bool, _ error:NSError?, _ reportID:CKRecordID?) -> ()) {
         if let cloudModelRecord = cloudModel.record {
-            self.model.currentDatabase.saveRecord(cloudModelRecord) { (record, error) -> Void in
+            self.model.currentDatabase.save(cloudModelRecord, completionHandler: { (record, error) -> Void in
                 if error == nil {
                     cloudModel.record = record
                     
                     // Successful
-                    callback(success: true, error: error, reportID: record?.recordID)
+                    callback(true, error as NSError?, record?.recordID)
                 } else {
-                    callback(success: false, error: error, reportID: record?.recordID)
+                    callback(false, error as NSError?, record?.recordID)
                 }
-            }
+            }) 
         }
     }
     
-    public func delete(cloudModel:T, callback:(success:Bool, error:NSError?) -> ()) {
+    open func delete(_ cloudModel:T, callback:@escaping (_ success:Bool, _ error:NSError?) -> ()) {
         if let cloudModelRecordID = cloudModel.record?.recordID {
-            model.currentDatabase.deleteRecordWithID(cloudModelRecordID) { (recordID, error) -> Void in
-                callback(success: error == nil, error: error)
+            model.currentDatabase.delete(withRecordID: cloudModelRecordID) { (recordID, error) -> Void in
+                callback(error == nil, error as NSError?)
             }
         }
-    }
-    
-    private func isConnectedToNetwork() -> Bool {
-        var zeroAddress = sockaddr_in()
-        zeroAddress.sin_len = UInt8(sizeofValue(zeroAddress))
-        zeroAddress.sin_family = sa_family_t(AF_INET)
-        
-        let defaultRouteReachability = withUnsafePointer(&zeroAddress) {
-            SCNetworkReachabilityCreateWithAddress(nil, UnsafePointer($0))
-        }
-        var flags = SCNetworkReachabilityFlags.ConnectionAutomatic
-        if SCNetworkReachabilityGetFlags(defaultRouteReachability!, &flags) == false {
-            return false
-        }
-        let isReachable = (flags.rawValue & UInt32(kSCNetworkFlagsReachable)) != 0
-        let needsConnection = (flags.rawValue & UInt32(kSCNetworkFlagsConnectionRequired)) != 0
-        return (isReachable && !needsConnection)
     }
 }

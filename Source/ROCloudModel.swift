@@ -10,11 +10,11 @@ import Foundation
 import CloudKit
 import ROConcurrency
 
-public class ROCloudModel {
+open class ROCloudModel {
     
-    public var recordType:String = ""
-    public var record:CKRecord?
-    public var currentDatabase:CKDatabase
+    open var recordType:String = ""
+    open var record:CKRecord?
+    open var currentDatabase:CKDatabase
     
     let container: CKContainer
     let publicDB: CKDatabase
@@ -24,7 +24,7 @@ public class ROCloudModel {
     var referenceLists = Dictionary<String, Array<CKReference>>()
     
     public required init() {
-        container = CKContainer.defaultContainer()
+        container = CKContainer.default()
         publicDB = container.publicCloudDatabase
         privateDB = container.privateCloudDatabase
         
@@ -32,21 +32,21 @@ public class ROCloudModel {
         self.currentDatabase = publicDB
     }
     
-    public func initializeRecord() {
+    open func initializeRecord() {
         self.record = CKRecord(recordType: self.recordType)
     }
     
-    public func encode() -> NSData? {
+    open func encode() -> Data? {
         if let record = self.record {
-            let archivedObject = NSKeyedArchiver.archivedDataWithRootObject(record)
+            let archivedObject = NSKeyedArchiver.archivedData(withRootObject: record)
             return archivedObject
         }
         
         return nil
     }
     
-    public func decode(data:NSData) -> ROCloudModel? {
-        if let record = NSKeyedUnarchiver.unarchiveObjectWithData(data) as? CKRecord {
+    open func decode(_ data:Data) -> ROCloudModel? {
+        if let record = NSKeyedUnarchiver.unarchiveObject(with: data) as? CKRecord {
             self.record = record
             return self
         } else {

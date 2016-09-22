@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		963F4E7B1DD7F6AB9E5EF6A5 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E776E2B29BC347143BAD791 /* Pods.framework */; };
+		897F5A6F3FA973649968DC92 /* Pods_ROCloudModel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B0B224730E0DC9875FA4104B /* Pods_ROCloudModel.framework */; };
 		CB976BB91C60D7D500A3F3EF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB976BB81C60D7D500A3F3EF /* AppDelegate.swift */; };
 		CB976BBE1C60D7D500A3F3EF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CB976BBC1C60D7D500A3F3EF /* Main.storyboard */; };
 		CB976BC01C60D7D500A3F3EF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CB976BBF1C60D7D500A3F3EF /* Assets.xcassets */; };
@@ -27,8 +27,9 @@
 
 /* Begin PBXFileReference section */
 		3E776E2B29BC347143BAD791 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		4F91C4F7B1CD03F2B021AE93 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
-		C42C7412539C8171EBEDE36F /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		4AA8E8B4BA551B73D330218F /* Pods-ROCloudModel.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ROCloudModel.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ROCloudModel/Pods-ROCloudModel.debug.xcconfig"; sourceTree = "<group>"; };
+		A0404DA6BB7AA0D6B89D3964 /* Pods-ROCloudModel.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ROCloudModel.release.xcconfig"; path = "Pods/Target Support Files/Pods-ROCloudModel/Pods-ROCloudModel.release.xcconfig"; sourceTree = "<group>"; };
+		B0B224730E0DC9875FA4104B /* Pods_ROCloudModel.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ROCloudModel.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CB976BB51C60D7D500A3F3EF /* ROCloudModel.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ROCloudModel.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CB976BB81C60D7D500A3F3EF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CB976BBD1C60D7D500A3F3EF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -55,18 +56,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				CB976BD81C60D84600A3F3EF /* CloudKit.framework in Frameworks */,
-				963F4E7B1DD7F6AB9E5EF6A5 /* Pods.framework in Frameworks */,
+				897F5A6F3FA973649968DC92 /* Pods_ROCloudModel.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		4DE0E639F06FAC05C398AD91 /* Pods */ = {
+		5F8931253F8F2F879E5A9E8C /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				C42C7412539C8171EBEDE36F /* Pods.debug.xcconfig */,
-				4F91C4F7B1CD03F2B021AE93 /* Pods.release.xcconfig */,
+				4AA8E8B4BA551B73D330218F /* Pods-ROCloudModel.debug.xcconfig */,
+				A0404DA6BB7AA0D6B89D3964 /* Pods-ROCloudModel.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -80,8 +81,8 @@
 				CB976BD71C60D84600A3F3EF /* CloudKit.framework */,
 				CB976BB71C60D7D500A3F3EF /* ROCloudModel */,
 				CB976BB61C60D7D500A3F3EF /* Products */,
-				4DE0E639F06FAC05C398AD91 /* Pods */,
 				DAEC4E24310FD7EB00A747EF /* Frameworks */,
+				5F8931253F8F2F879E5A9E8C /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -126,6 +127,7 @@
 			isa = PBXGroup;
 			children = (
 				3E776E2B29BC347143BAD791 /* Pods.framework */,
+				B0B224730E0DC9875FA4104B /* Pods_ROCloudModel.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -137,12 +139,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = CB976BC71C60D7D500A3F3EF /* Build configuration list for PBXNativeTarget "ROCloudModel" */;
 			buildPhases = (
-				FDC35F1047E1FD378D0DFD25 /* Check Pods Manifest.lock */,
+				AD655C1B39CCE555571C4E94 /* [CP] Check Pods Manifest.lock */,
 				CB976BB11C60D7D500A3F3EF /* Sources */,
 				CB976BB21C60D7D500A3F3EF /* Frameworks */,
 				CB976BB31C60D7D500A3F3EF /* Resources */,
-				6EFDBDD4C8032621731E4C26 /* Embed Pods Frameworks */,
-				F6860BC4FD39DB3CC7629303 /* Copy Pods Resources */,
+				8367B9AE6D7F1C309E071520 /* [CP] Embed Pods Frameworks */,
+				87E135987638B49CB4817039 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -160,12 +162,13 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0720;
-				LastUpgradeCheck = 0720;
+				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = "Prine Development";
 				TargetAttributes = {
 					CB976BB41C60D7D500A3F3EF = {
 						CreatedOnToolsVersion = 7.2;
 						DevelopmentTeam = 39J9X3JBYC;
+						LastSwiftMigration = 0800;
 						SystemCapabilities = {
 							com.apple.iCloud = {
 								enabled = 1;
@@ -208,49 +211,49 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		6EFDBDD4C8032621731E4C26 /* Embed Pods Frameworks */ = {
+		8367B9AE6D7F1C309E071520 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Embed Pods Frameworks";
+			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ROCloudModel/Pods-ROCloudModel-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		F6860BC4FD39DB3CC7629303 /* Copy Pods Resources */ = {
+		87E135987638B49CB4817039 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Copy Pods Resources";
+			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ROCloudModel/Pods-ROCloudModel-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		FDC35F1047E1FD378D0DFD25 /* Check Pods Manifest.lock */ = {
+		AD655C1B39CCE555571C4E94 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Check Pods Manifest.lock";
+			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -307,8 +310,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -330,7 +335,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -352,8 +357,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -369,9 +376,10 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -379,35 +387,39 @@
 		};
 		CB976BC81C60D7D500A3F3EF /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C42C7412539C8171EBEDE36F /* Pods.debug.xcconfig */;
+			baseConfigurationReference = 4AA8E8B4BA551B73D330218F /* Pods-ROCloudModel.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = ROCloudModel/ROCloudModel.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = ROCloudModel/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = ch.prine.ROCloudModel;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
 		CB976BC91C60D7D500A3F3EF /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4F91C4F7B1CD03F2B021AE93 /* Pods.release.xcconfig */;
+			baseConfigurationReference = A0404DA6BB7AA0D6B89D3964 /* Pods-ROCloudModel.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = ROCloudModel/ROCloudModel.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = ROCloudModel/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = ch.prine.ROCloudModel;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};

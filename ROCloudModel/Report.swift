@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CloudKit
 
 class Report : ROCloudModel {
     
@@ -29,7 +30,7 @@ class Report : ROCloudModel {
         }
         
         set(value) {
-            self.record?["name"] = value
+            self.record?["name"] = value as CKRecordValue?
         }
     }
     
@@ -39,7 +40,7 @@ class Report : ROCloudModel {
         }
         
         set(value) {
-            self.record?["title"] = value
+            self.record?["title"] = value as CKRecordValue?
         }
     }
     
@@ -50,7 +51,7 @@ class Report : ROCloudModel {
         }
         
         set(value) {
-            self.record?["stringLists"] = value
+            self.record?["stringLists"] = value as CKRecordValue?
         }
     }
 }

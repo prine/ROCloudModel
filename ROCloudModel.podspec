@@ -7,28 +7,17 @@
 # To learn more about a Podspec see http://guides.cocoapods.org/syntax/podspec.html
 #
 
-Pod::Spec.new do |s|
-s.name             = "ROCloudModel"
-s.version          = "1.0.3"
-s.summary          = "CloudKit Data Mapper"
-s.description      = <<-DESC
-Provides an abstract layer above the CloudKit and simplifies the mapping between CKRecord and Swift Data classes.
-DESC
-s.homepage         = "https://github.com/prine/ROCloudModel"
-s.license          = 'MIT'
-s.author           = { "Robin Oster" => "robin.oster@rascor.com" }
-s.source           = { :git => "https://github.com/prine/ROCloudModel.git", :tag => s.version.to_s }
-s.social_media_url = 'https://twitter.com/prinedev'
 
-s.platform     = :ios, '8.0'
-s.requires_arc = true
-
-s.source_files = 'Source/**/*'
-s.resource_bundles = {
-'RONetworking' => ['Pod/Assets/*.png']
-}
-
-# s.public_header_files = 'Pod/Classes/**/*.h'
-s.frameworks = 'UIKit', 'CloudKit'
-s.dependency 'ROConcurrency'
+Pod::Spec.new do |spec|
+    spec.name         = 'ROCloudModel'
+    spec.version      = '1.1.0'
+    spec.license      = { :type => 'MIT' }
+    spec.homepage     = 'https://github.com/prine/ROCloudModel'
+    spec.authors      = { 'Robin Oster' => 'prine.dev@gmail.com' }
+    spec.summary      = 'Provides an abstract layer above the CloudKit and simplifies the mapping between CKRecord and Swift Data classes.'
+    spec.source       = { :git => 'https://github.com/prine/ROCloudModel.git', :tag => "1.1.0" }
+    spec.source_files = 'Source/**/*'
+    spec.framework    = 'SystemConfiguration'
+    spec.ios.deployment_target  = '8.4'
+    spec.dependency 'ROConcurrency'
 end

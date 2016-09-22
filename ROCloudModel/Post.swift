@@ -31,7 +31,7 @@ class Post : ROCloudModel {
         }
         
         set(value) {
-            self.record?["title"] = value
+            self.record?["title"] = value as CKRecordValue?
         }
     }
     
@@ -46,16 +46,16 @@ class Post : ROCloudModel {
     }
    
     // Reference
-    func report(callback:(report:Report) -> ()) {
+    func report(_ callback:@escaping (_ report:Report) -> ()) {
         fetchReference("report") { (report:Report) -> () in
-            callback(report:report)
+            callback(report)
         }
     }
     
     // Reference List
-    func reports(callback:(reports:Array<Report>) -> ()) {
+    func reports(_ callback:@escaping (_ reports:Array<Report>) -> ()) {
         fetchReferenceArray("reports") { (reports:Array<Report>) -> () in
-            callback(reports:reports)
+            callback(reports)
         }
     }
 }

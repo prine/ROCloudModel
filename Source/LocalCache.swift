@@ -8,30 +8,30 @@
 
 import Foundation
 
-public class LocalCache<T:ROCloudModel> {
+open class LocalCache<T:ROCloudModel> {
     
-    var userDefaults = NSUserDefaults.standardUserDefaults()
+    var userDefaults = UserDefaults.standard
     var defaultKey = "localCache.DefaultKey"
     
-    public func storeData<T:ROCloudModel>(data:Array<T>, cachingKey:String? = nil) {
+    open func storeData<T:ROCloudModel>(_ data:Array<T>, cachingKey:String? = nil) {
         
-        var serializableObjects = Array<NSData>()
+        var serializableObjects = Array<Data>()
         
         for model in data {
             if let offlineObject = model.encode() {
-                serializableObjects.append(offlineObject)
+                serializableObjects.append(offlineObject as Data)
             }
         }
         
-        userDefaults.setObject(serializableObjects, forKey: cachingKey ?? defaultKey)
+        userDefaults.set(serializableObjects, forKey: cachingKey ?? defaultKey)
         userDefaults.synchronize()
     }
     
-    public func loadData<T:ROCloudModel>(cachingKey:String? = nil) -> Array<T> {
+    open func loadData<T:ROCloudModel>(_ cachingKey:String? = nil) -> Array<T> {
         
         var models = Array<T>()
         
-        if let serializedObjects = userDefaults.objectForKey(cachingKey ?? defaultKey) as? Array<NSData> {
+        if let serializedObjects = userDefaults.object(forKey: cachingKey ?? defaultKey) as? Array<Data> {
             for serializeObject in serializedObjects {
                 
                 let cloudModel = T()
@@ -47,8 +47,8 @@ public class LocalCache<T:ROCloudModel> {
         }
     }
     
-    public func decode<T:ROCloudModel>(data:NSData) -> Array<T> {
-        if let models = NSKeyedUnarchiver.unarchiveObjectWithData(data) as? Array<T> {
+    open func decode<T:ROCloudModel>(_ data:Data) -> Array<T> {
+        if let models = NSKeyedUnarchiver.unarchiveObject(with: data) as? Array<T> {
             return models
         } else {
             return []

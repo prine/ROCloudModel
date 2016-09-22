@@ -12,51 +12,51 @@ import ROConcurrency
 
 public extension ROCloudModel {
     
-    public func save(callback:(success:Bool, error:NSError?, record:CKRecord?) -> ()) {
+    public func save(_ callback:@escaping (_ success:Bool, _ error:Error?, _ record:CKRecord?) -> ()) {
         
         // FIXME: Rewrite that it can handle more than one save at the same time
         if let record = self.record {
-            self.currentDatabase.saveRecord(record, completionHandler: { (record, error) -> Void in
-                callback(success: error == nil, error: error, record: record)
+            self.currentDatabase.save(record, completionHandler: { (record, error) in
+                callback(error == nil, error, record)
             })
         }
     }
     
-    public func saveDeep(callback:(success:Bool, error:NSError?, recordID:CKRecordID?) -> ()) {
+    public func saveDeep(_ callback:@escaping (_ success:Bool, _ error:NSError?, _ recordID:CKRecordID?) -> ()) {
         if let record = record {
-            self.currentDatabase.saveRecord(record, completionHandler: { (record, error) -> Void in
+            self.currentDatabase.save(record, completionHandler: { (record, error) -> Void in
                 if error == nil {
                     // Successful
                     if let recordID = record?.recordID {
-                        callback(success: true, error: error, recordID: recordID)
+                        callback(true, error as NSError?, recordID)
                         return
                     }
     
-                    callback(success: false, error: error, recordID: nil)
+                    callback(false, error as NSError?, nil)
                 }
             })
         }
     }
     
-    public func setReferenceValue<T:ROCloudModel>(referenceName:String, value:T?) {
+    public func setReferenceValue<T:ROCloudModel>(_ referenceName:String, value:T?) {
         if let givenRecord = value?.record {
-            self.record?[referenceName] = CKReference(record: givenRecord, action: CKReferenceAction.None)
+            self.record?[referenceName] = CKReference(record: givenRecord, action: CKReferenceAction.none)
         }
     }
     
-    public func fetchReferenceSynchronous<T:ROCloudModel>(referenceName:String) -> T? {
+    public func fetchReferenceSynchronous<T:ROCloudModel>(_ referenceName:String) -> T? {
 
         var retrievedCloudModel:T?
         
-        let semaphore = dispatch_semaphore_create(0)
+        let semaphore = DispatchSemaphore(value: 0)
         
         self.fetchReference(referenceName) { (cloudModel:T) -> () in
             retrievedCloudModel = cloudModel
-            dispatch_semaphore_signal(semaphore)
+            semaphore.signal()
         }
         
-        let timeout = dispatch_time(DISPATCH_TIME_NOW, 1000*1000*1000*5)
-        if (dispatch_semaphore_wait(semaphore, timeout) != 0) {
+        let timeout = DispatchTime.now() + Double(1000*1000*5) / Double(NSEC_PER_SEC)
+        if (semaphore.wait(timeout: timeout) != DispatchTimeoutResult.timedOut) {
             SynchronizedLogger.sharedInstance.log("Semaphore time out received")
         }
         
@@ -64,22 +64,22 @@ public extension ROCloudModel {
     }
 
     
-    public func fetchReference<T:ROCloudModel>(referenceName:String, callback:(cloudModel:T) -> ()) {
+    public func fetchReference<T:ROCloudModel>(_ referenceName:String, callback:@escaping (_ cloudModel:T) -> ()) {
         if let reference = self.record?[referenceName] as? CKReference {
             
-            self.currentDatabase.fetchRecordWithID(reference.recordID, completionHandler: { (record, error) -> Void in
+            self.currentDatabase.fetch(withRecordID: reference.recordID, completionHandler: { (record, error) -> Void in
                 let cloudModel = T()
                 cloudModel.record = record
                 
                 // Store reference locally
                 self.references.updateValue(reference, forKey: referenceName)
                 
-                callback(cloudModel: cloudModel)
+                callback(cloudModel)
             })
         }
     }
     
-    public func fetchReferenceArray<T:ROCloudModel>(referenceName:String, callback:(cloudModels:Array<T>) -> ()) {
+    public func fetchReferenceArray<T:ROCloudModel>(_ referenceName:String, callback:@escaping (_ cloudModels:Array<T>) -> ()) {
         if let references = self.record?[referenceName] as? Array<CKReference> {
             
             var recordIDs = Array<CKRecordID>()
@@ -117,12 +117,12 @@ public extension ROCloudModel {
                             }
                         }
                         
-                        callback(cloudModels: cloudModels)
+                        callback(cloudModels)
                     }
                 }
             }
             
-            self.currentDatabase.addOperation(fetchOperation)
+            self.currentDatabase.add(fetchOperation)
         }
     }
 
