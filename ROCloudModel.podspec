@@ -10,7 +10,7 @@
 
 Pod::Spec.new do |spec|
     spec.name         = 'ROCloudModel'
-    spec.version      = '1.1.0'
+    spec.version      = '1.1.1'
     spec.license      = { :type => 'MIT' }
     spec.homepage     = 'https://github.com/prine/ROCloudModel'
     spec.authors      = { 'Robin Oster' => 'prine.dev@gmail.com' }
@@ -19,5 +19,5 @@ Pod::Spec.new do |spec|
     spec.source_files = 'Source/**/*'
     spec.framework    = 'SystemConfiguration'
     spec.ios.deployment_target  = '8.4'
-    spec.dependency 'ROConcurrency', '~> 2.1's
+    spec.dependency 'ROConcurrency', '~> 2.1'
 end
