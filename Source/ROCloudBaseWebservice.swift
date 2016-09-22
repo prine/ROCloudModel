@@ -9,7 +9,6 @@
 import Foundation
 import CloudKit
 import ROConcurrency
-import ROHelper
 import SystemConfiguration
 
 
@@ -62,6 +61,32 @@ open class ROCloudBaseWebservice<T:ROCloudModel> {
         self.model.currentDatabase.add(operation)
     }
     
+    fileprivate func isConnectedToNetwork() -> Bool {
+        
+        var zeroAddress = sockaddr_in()
+        zeroAddress.sin_len = UInt8(MemoryLayout<sockaddr_in>.size)
+        zeroAddress.sin_family = sa_family_t(AF_INET)
+        
+        guard let defaultRouteReachability = withUnsafePointer(to: &zeroAddress, {
+            $0.withMemoryRebound(to: sockaddr.self, capacity: 1) {
+                SCNetworkReachabilityCreateWithAddress(nil, $0)
+            }
+        }) else {
+            return false
+        }
+        
+        var flags: SCNetworkReachabilityFlags = []
+        if !SCNetworkReachabilityGetFlags(defaultRouteReachability, &flags) {
+            return false
+        }
+        
+        let isReachable = flags.contains(.reachable)
+        let needsConnection = flags.contains(.connectionRequired)
+        
+        return (isReachable && !needsConnection)
+    }
+
+    
     fileprivate func retrieveNextRecords(_ cursor:CKQueryCursor?, error:Error?, records:Array<T>, callback:@escaping (_ records:Array<T>) -> ()) {
         if let cursor = cursor {
             // There is more data to fetch
@@ -71,7 +96,7 @@ open class ROCloudBaseWebservice<T:ROCloudModel> {
                 self.retrieveNextRecords(cursor, error:error, records:self.fetchedRecords, callback: callback)
             }
 
-            if ROHelper.ConnectivityHelper.isConnectedToNetwork() {
+            if self.isConnectedToNetwork() {
                 self.model.currentDatabase.add(moreWork)
             }
         } else {
@@ -87,7 +112,7 @@ open class ROCloudBaseWebservice<T:ROCloudModel> {
     
     open func loadWithCache(_ predicate:NSPredicate? = nil, sortDescriptors:Array<NSSortDescriptor>? = nil, amountRecords:Int? = nil, desiredKeys:Array<String>? = nil, cachingKey:String? = nil, callback:@escaping (_ data:Array<T>, _ dataSource:DataSource) -> ()) {
         
-        let cancable = Delay.delayCall(0.5) { () -> () in
+        Delay.delayCall(0.5) { () -> () in
             // First return offline data
             callback(self.localCache.loadData(cachingKey), DataSource.offline)
         }

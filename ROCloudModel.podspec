@@ -19,5 +19,5 @@ Pod::Spec.new do |spec|
     spec.source_files = 'Source/**/*'
     spec.framework    = 'SystemConfiguration'
     spec.ios.deployment_target  = '8.4'
-    spec.dependency 'ROConcurrency'
+    spec.dependency 'ROConcurrency', '~> 2.1's
 end
