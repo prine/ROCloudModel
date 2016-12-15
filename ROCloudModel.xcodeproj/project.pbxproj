@@ -17,7 +17,7 @@
 		CB976BD51C60D80C00A3F3EF /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB976BD41C60D80C00A3F3EF /* ViewController.swift */; };
 		CB976BD81C60D84600A3F3EF /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB976BD71C60D84600A3F3EF /* CloudKit.framework */; };
 		CB976BDA1C60D88A00A3F3EF /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = CB976BD91C60D88A00A3F3EF /* Podfile */; };
-		CB9CE65F1E02995F008BA66E /* ROCloudModelSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB9CE65E1E02995F008BA66E /* ROCloudModelSettings.swift */; };
+		CB9CE6611E029FD0008BA66E /* ROCloudModelSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB9CE6601E029FD0008BA66E /* ROCloudModelSettings.swift */; };
 		CBDF87BB1C93096A00A2ED91 /* LocalCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBDF87BA1C93096A00A2ED91 /* LocalCache.swift */; };
 		CBE768781C62048600967C3F /* ROCloudModel.podspec in Resources */ = {isa = PBXBuildFile; fileRef = CBE768771C62048600967C3F /* ROCloudModel.podspec */; };
 		CBE768831C6208C000967C3F /* ROCloudBaseWebservice.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBE768801C6208C000967C3F /* ROCloudBaseWebservice.swift */; };
@@ -43,7 +43,7 @@
 		CB976BD61C60D84300A3F3EF /* ROCloudModel.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = ROCloudModel.entitlements; sourceTree = "<group>"; };
 		CB976BD71C60D84600A3F3EF /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		CB976BD91C60D88A00A3F3EF /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
-		CB9CE65E1E02995F008BA66E /* ROCloudModelSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ROCloudModelSettings.swift; sourceTree = "<group>"; };
+		CB9CE6601E029FD0008BA66E /* ROCloudModelSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ROCloudModelSettings.swift; path = Source/ROCloudModelSettings.swift; sourceTree = "<group>"; };
 		CBDF87BA1C93096A00A2ED91 /* LocalCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LocalCache.swift; path = Source/LocalCache.swift; sourceTree = "<group>"; };
 		CBE768771C62048600967C3F /* ROCloudModel.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ROCloudModel.podspec; sourceTree = "<group>"; };
 		CBE768801C6208C000967C3F /* ROCloudBaseWebservice.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ROCloudBaseWebservice.swift; path = Source/ROCloudBaseWebservice.swift; sourceTree = "<group>"; };
@@ -116,8 +116,8 @@
 		CBE768791C62063100967C3F /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				CB9CE6601E029FD0008BA66E /* ROCloudModelSettings.swift */,
 				CBE768801C6208C000967C3F /* ROCloudBaseWebservice.swift */,
-				CB9CE65E1E02995F008BA66E /* ROCloudModelSettings.swift */,
 				CBE768811C6208C000967C3F /* ROCloudModel.swift */,
 				CBE768821C6208C000967C3F /* ROCloudModelOperations.swift */,
 				CBDF87BA1C93096A00A2ED91 /* LocalCache.swift */,
@@ -271,7 +271,7 @@
 				CBE768831C6208C000967C3F /* ROCloudBaseWebservice.swift in Sources */,
 				CBDF87BB1C93096A00A2ED91 /* LocalCache.swift in Sources */,
 				CB976BD51C60D80C00A3F3EF /* ViewController.swift in Sources */,
-				CB9CE65F1E02995F008BA66E /* ROCloudModelSettings.swift in Sources */,
+				CB9CE6611E029FD0008BA66E /* ROCloudModelSettings.swift in Sources */,
 				CB976BD31C60D7F300A3F3EF /* Post.swift in Sources */,
 				CB976BD21C60D7F300A3F3EF /* Report.swift in Sources */,
 				CBE768871C62092E00967C3F /* README.md in Sources */,
