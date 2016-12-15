@@ -24,7 +24,7 @@ open class ROCloudModel {
     var referenceLists = Dictionary<String, Array<CKReference>>()
     
     public required init() {
-        container = CKContainer.default()
+        container = ROCloudModelSettings.sharedInstance.container
         publicDB = container.publicCloudDatabase
         privateDB = container.privateCloudDatabase
         
