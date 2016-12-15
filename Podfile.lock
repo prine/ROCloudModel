@@ -1,0 +1,15 @@
+PODS:
+  - ROConcurrency (2.1.0)
+  - ROHelper (2.1.1)
+
+DEPENDENCIES:
+  - ROConcurrency (~> 2.1)
+  - ROHelper (~> 2.1)
+
+SPEC CHECKSUMS:
+  ROConcurrency: c73f86bd90b8920f0ecba69197c23b8caf651fa1
+  ROHelper: 5bc8065bccd9602ddcb5663769b0484c761aa7d1
+
+PODFILE CHECKSUM: 8f70bd926bf5461c69f4c24ca5760777e4b17a1e
+
+COCOAPODS: 1.1.0.rc.2
