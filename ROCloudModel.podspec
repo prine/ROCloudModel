@@ -10,12 +10,12 @@
 
 Pod::Spec.new do |spec|
     spec.name         = 'ROCloudModel'
-    spec.version      = '1.1.2'
+    spec.version      = '1.1.3'
     spec.license      = { :type => 'MIT' }
     spec.homepage     = 'https://github.com/prine/ROCloudModel'
     spec.authors      = { 'Robin Oster' => 'prine.dev@gmail.com' }
     spec.summary      = 'Provides an abstract layer above the CloudKit and simplifies the mapping between CKRecord and Swift Data classes.'
-    spec.source       = { :git => 'https://github.com/prine/ROCloudModel.git', :tag => "1.1.2" }
+    spec.source       = { :git => 'https://github.com/prine/ROCloudModel.git', :tag => "1.1.3" }
     spec.source_files = 'Source/**/*'
     spec.framework    = 'SystemConfiguration'
     spec.ios.deployment_target  = '8.4'
