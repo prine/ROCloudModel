@@ -9,9 +9,9 @@
 import Foundation
 import CloudKit
 
-public class ROCloudModelSettings {
+open class ROCloudModelSettings {
     
-    public var container = CKContainer.default()
+    open var container = CKContainer.default()
     
     private init() {
         // Make constructor private
