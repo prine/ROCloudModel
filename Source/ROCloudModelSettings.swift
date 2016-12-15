@@ -17,7 +17,7 @@ open class ROCloudModelSettings {
         // Make constructor private
     }
     
-    static let sharedInstance : ROCloudModelSettings = {
+    open static let sharedInstance : ROCloudModelSettings = {
         let instance = ROCloudModelSettings()
         return instance
     }()
